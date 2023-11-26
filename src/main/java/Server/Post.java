@@ -12,7 +12,16 @@ public class Post {
     public String mensaje;
     public int likes;
     public ThreadServer owner;
+    public int dislikes;
 
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+    
     public ThreadServer getOwner() {
         return owner;
     }
@@ -46,6 +55,11 @@ public class Post {
     
     public void likeIt() {
         likes++;
+        System.out.println(this.mensaje + " " + this.owner.getUserName() + " " + this.likes);
+    }
+    
+    public void dislikeIt() {
+        dislikes++;
         System.out.println(this.mensaje + " " + this.owner.getUserName() + " " + this.likes);
     }
     

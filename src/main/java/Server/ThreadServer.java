@@ -148,13 +148,16 @@ public class ThreadServer extends Thread implements Member, Follower {
             try {
                 caso = this.entrada.readInt();
                 switch (caso) {
-                    case 1: //Usuario regular quiere seguir a un VIP
+                    case 1: //Regular: Wants to follow
                         String memberToFollow = this.entrada.readUTF();
                         boolean validate = false;
                         for (ThreadServer usuario : usuariosEnLinea) {
                             if (memberToFollow.equals(usuario.getUserName())) {
                                 if (usuario.getStatus() == Status.VIP && this.getStatus() == Status.Regular) {
                                     usuario.addObserver(this);
+                                    if (usuario.usuariosQueMeSiguen.size() % 10 == 0) {
+                                        usuario.notifyObservers(usuario.getUserName() + " ha llegado a " + usuario.usuariosQueMeSiguen.size() + "seguidores");
+                                    }
                                     this.usuariosQueSigo.add(usuario);
                                     validate = true;
                                     break;
@@ -164,9 +167,8 @@ public class ThreadServer extends Thread implements Member, Follower {
                         if (validate) {
                             this.seeFollowing();
                         }
-
                         break;
-                    case 2: //Make a Post
+                    case 2: //VIP: Make a Post
                         String post = this.entrada.readUTF();
                         Post tempo = new Post(post, this);
                         postsCreados.add(tempo);
@@ -178,16 +180,35 @@ public class ThreadServer extends Thread implements Member, Follower {
                         }
                         this.notifyObservers("Nuevo Post de: " + this.getUserName());
                         break;
-                    case 3:
+                    case 3: //Regular: wants to like
                         String postToLike = this.entrada.readUTF();
                         String ownerToLike = this.entrada.readUTF();
-                        for (ThreadServer usuarioQueSigo : usuariosQueSigo) {
-                            for (Post postSearch : usuarioQueSigo.postsCreados) {
-                                if (postSearch.getMensaje().equals(postToLike)) {
-                                    postSearch.likeIt();
+                        String likeDislike = this.entrada.readUTF();
+                        if ("like".equals(likeDislike)) {
+                            for (ThreadServer usuarioQueSigo : usuariosQueSigo) {
+                                for (Post postSearch : usuarioQueSigo.postsCreados) {
+                                    if (postSearch.getMensaje().equals(postToLike)) {
+                                        postSearch.likeIt();
+                                        if (postSearch.getLikes() % 10 == 0) {
+                                            usuarioQueSigo.notifyObservers("El post < " + postSearch.getMensaje() + " > llego a 10 likes!");
+                                        }
+                                    }
                                 }
                             }
+                        } else {
+                            for (ThreadServer usuarioQueSigo : usuariosQueSigo) {
+                                for (Post postSearch : usuarioQueSigo.postsCreados) {
+                                    if (postSearch.getMensaje().equals(postToLike)) {
+                                        postSearch.dislikeIt();
+                                        usuarioQueSigo.notifyObservers("El post < " + postSearch.getMensaje() + " tuvo un dislike por parte de: " + this.getUserName());
+                                    }
+                                }
+                            }
+                            
                         }
+                        break;
+                    case 4://VIP: Se dio de baja
+                        baja();
                         break;
                 }
             } catch (IOException e) {
@@ -329,11 +350,20 @@ public class ThreadServer extends Thread implements Member, Follower {
     @Override
     public void update(String message) {
         try {
-                this.salida.writeInt(4);
-                this.salida.writeUTF(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            this.salida.writeInt(4);
+            this.salida.writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void baja() throws JsonProcessingException {
+        for (ThreadServer observer : usuariosQueMeSiguen) {
+            removeObserver(observer);
+            observer.usuariosQueSigo.remove(this);
+            observer.seeFollowing();
+        }
 
     }
 

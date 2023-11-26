@@ -52,7 +52,7 @@ public class VentanaCliente extends javax.swing.JFrame {
         txfPost = new javax.swing.JTextField();
         btnPost = new javax.swing.JButton();
         jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnBaja = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         txaBoard = new javax.swing.JTextArea();
 
@@ -83,14 +83,14 @@ public class VentanaCliente extends javax.swing.JFrame {
         txaFollowersFollowing.setRows(5);
         jScrollPane3.setViewportView(txaFollowersFollowing);
 
-        txfPost.setText("¿Que piensas?");
+        txfPost.setText("Interacciona");
         txfPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfPostActionPerformed(evt);
             }
         });
 
-        btnPost.setText("Publicar");
+        btnPost.setText("Vamos");
         btnPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPostActionPerformed(evt);
@@ -99,7 +99,12 @@ public class VentanaCliente extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField2");
 
-        jButton1.setText("jButton1");
+        btnBaja.setText("Bye");
+        btnBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBajaActionPerformed(evt);
+            }
+        });
 
         txaBoard.setColumns(20);
         txaBoard.setRows(5);
@@ -137,7 +142,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)
+                        .addComponent(btnBaja)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txfPost, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,7 +174,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btnBaja))
                 .addGap(15, 15, 15))
         );
 
@@ -213,6 +218,7 @@ public class VentanaCliente extends javax.swing.JFrame {
                 usuario.salida.writeInt(3);
                 usuario.salida.writeUTF(splitMcGoo[0]);
                 usuario.salida.writeUTF(splitMcGoo[1]);
+                usuario.salida.writeUTF(splitMcGoo[2]);
 
             } catch (IOException e) {
                 System.out.println("ay caramba");
@@ -226,6 +232,17 @@ public class VentanaCliente extends javax.swing.JFrame {
     private void txfPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfPostActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txfPostActionPerformed
+
+    private void btnBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBajaActionPerformed
+        try {
+                
+                usuario.salida.writeInt(4);
+
+
+            } catch (IOException e) {
+                System.out.println("ay caramba");
+            }
+    }//GEN-LAST:event_btnBajaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -303,9 +320,9 @@ public class VentanaCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBaja;
     private javax.swing.JButton btnFollow;
     private javax.swing.JButton btnPost;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
