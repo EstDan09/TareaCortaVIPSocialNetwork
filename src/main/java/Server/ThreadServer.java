@@ -155,7 +155,7 @@ public class ThreadServer extends Thread implements Member, Follower {
                             if (memberToFollow.equals(usuario.getUserName())) {
                                 if (usuario.getStatus() == Status.VIP && this.getStatus() == Status.Regular) {
                                     usuario.addObserver(this);
-                                    if (usuario.usuariosQueMeSiguen.size() % 10 == 0) {
+                                    if (usuario.usuariosQueMeSiguen.size() % 2 == 0) { //usuario.usuariosQueMeSiguen.size() % 10 == 0
                                         usuario.notifyObservers(usuario.getUserName() + " ha llegado a " + usuario.usuariosQueMeSiguen.size() + "seguidores");
                                     }
                                     this.usuariosQueSigo.add(usuario);
@@ -189,7 +189,7 @@ public class ThreadServer extends Thread implements Member, Follower {
                                 for (Post postSearch : usuarioQueSigo.postsCreados) {
                                     if (postSearch.getMensaje().equals(postToLike)) {
                                         postSearch.likeIt();
-                                        if (postSearch.getLikes() % 10 == 0) {
+                                        if (postSearch.getLikes() % 2 == 0) {
                                             usuarioQueSigo.notifyObservers("El post < " + postSearch.getMensaje() + " > llego a 10 likes!");
                                         }
                                     }
@@ -359,11 +359,14 @@ public class ThreadServer extends Thread implements Member, Follower {
     }
 
     public void baja() throws JsonProcessingException {
+        System.out.println(usuariosQueMeSiguen);
         for (ThreadServer observer : usuariosQueMeSiguen) {
-            removeObserver(observer);
+            System.out.println("for time");
             observer.usuariosQueSigo.remove(this);
             observer.seeFollowing();
+            //removeObserver(observer);
         }
+        usuariosQueMeSiguen.clear();
 
     }
 
